@@ -15,24 +15,30 @@ const About = () => {
         <div className="about__left">
           <p className="about__eyebrow">Our story</p>
           <h2 className="about__title">
-            Built on the<br />
-            <em>obsession</em><br />
+            Built on the
+            <br />
+            <em>obsession</em>
+            <br />
             with a good fold.
           </h2>
           <p className="about__body">
-            FOLD started in 2019 out of a tiny Lower East Side kitchen with one rule: 
-            no filler, no shortcuts. Every sandwich is built around a single great 
-            ingredient — the bread, a house-cured meat, a ferment — and everything 
-            else amplifies it.
+            FOLD started in 2019 out of a tiny Lower East Side kitchen with one
+            rule: no filler, no shortcuts. Every sandwich is built around a
+            single great ingredient — our signature house-cured meats or freshly
+            baked bread — and everything else amplifies it.
           </p>
           <p className="about__body">
-            We source from farms within 200 miles, bake our own loaves each morning, 
-            and refuse to serve anything that doesn't earn its place on the plate. 
-            It's not fast food. It's food worth waiting for.
+            We source from farms within 200 miles, bake our own loaves each
+            morning, and refuse to serve anything that doesn't earn its place on
+            the plate. It's not fast food. It's food worth waiting for.
           </p>
           <button
             className="about__btn"
-            onClick={() => document.getElementById("menu")?.scrollIntoView({ behavior: "smooth" })}
+            onClick={() =>
+              document
+                .getElementById("menu")
+                ?.scrollIntoView({ behavior: "smooth" })
+            }
           >
             See what we're making today →
           </button>
