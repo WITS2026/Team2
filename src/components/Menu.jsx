@@ -63,7 +63,8 @@ const Menu = () => {
         </div>
 
         <p className="menu__note">
-          ✦ All items can be made gluten-free upon request. Ask about seasonal specials.
+          ✦ All items are 100% Glatt Kosher. Gluten-free options available upon
+          request.
         </p>
       </div>
     </section>
