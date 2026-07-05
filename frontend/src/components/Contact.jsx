@@ -2,9 +2,10 @@ import React from "react";
 import "./Contact.css";
 
 const hours = [
-  { day: "Mon – Fri", time: "8:00 AM – 8:00 PM" },
-  { day: "Saturday", time: "9:00 AM – 7:00 PM" },
-  { day: "Sunday", time: "10:00 AM – 5:00 PM" },
+  { day: "Mon – Thu", time: "11:00 AM – 9:00 PM" },
+  { day: "Friday", time: "11:00 AM – 3:00 PM" },
+  { day: "Saturday", time: "Closed" },
+  { day: "Sunday", time: "12:00 PM – 9:00 PM" },
 ];
 
 const Contact = () => {
@@ -15,8 +16,10 @@ const Contact = () => {
           <p className="contact__eyebrow">Visit us</p>
           <h2 className="contact__title">Come find us.</h2>
           <p className="contact__address">
-            147 Orchard Street<br />
-            Lower East Side<br />
+            147 Orchard Street
+            <br />
+            Lower East Side
+            <br />
             New York, NY 10002
           </p>
 
