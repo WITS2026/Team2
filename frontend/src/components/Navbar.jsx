@@ -41,8 +41,12 @@ const Navbar = ({ cartItems = [] }) => {
             </button>
           </li> */}
           <li>
-            <button className="navbar__cta" onClick={() => scrollTo("cart")}>
-              🛒 Cart ({cartItems.length})
+            <button
+              className="navbar__cta"
+              onClick={() => scrollTo("cart")}
+              aria-label={`Cart, ${cartItems.length} item${cartItems.length === 1 ? "" : "s"}`}
+            >
+              <span aria-hidden="true">🛒 Cart ({cartItems.length})</span>
             </button>
           </li>
         </ul>

@@ -2,13 +2,15 @@ import React, { useState, useEffect, useMemo } from "react";
 import { tagColors } from "../data/TagColors";
 import "./Menu.css";
 
-const MenuItem = ({ item }) => {
+const MenuItem = ({ item, onAdd }) => {
   const tag = tagColors?.[item.tag];
 
   return (
     <div className="menu-item">
       <div className="menu-item__top">
-        <div className="menu-item__emoji">{item.emoji}</div>
+        <div className="menu-item__emoji" aria-hidden="true">
+          {item.emoji}
+        </div>
 
         {item.tag && (
           <span
@@ -25,13 +27,19 @@ const MenuItem = ({ item }) => {
 
       <div className="menu-item__footer">
         <span className="menu-item__price">${item.price}</span>
-        <button className="menu-item__add">Add to order +</button>
+        <button
+          className="menu-item__add"
+          onClick={() => onAdd(item)}
+          aria-label={`Add ${item.name} to order`}
+        >
+          Add to order +
+        </button>
       </div>
     </div>
   );
 };
 
-const Menu = () => {
+const Menu = ({ onAddToCart }) => {
   const [menuItems, setMenuItems] = useState([]);
   const [activeTab, setActiveTab] = useState("sandwiches");
   const [loading, setLoading] = useState(true);
@@ -66,11 +74,19 @@ const Menu = () => {
   }, [menuItems, activeTab]);
 
   if (loading) {
-    return <p className="menu__loading">Loading menu...</p>;
+    return (
+      <p className="menu__loading" role="status">
+        Loading menu...
+      </p>
+    );
   }
 
   if (error) {
-    return <p className="menu__error">Error: {error}</p>;
+    return (
+      <p className="menu__error" role="alert">
+        Error: {error}
+      </p>
+    );
   }
 
   return (
@@ -85,12 +101,14 @@ const Menu = () => {
         </div>
 
         {/* Tabs */}
-        <div className="menu__tabs">
+        <div className="menu__tabs" role="tablist" aria-label="Menu categories">
           <button
             className={`menu__tab ${
               activeTab === "sandwiches" ? "menu__tab--active" : ""
             }`}
             onClick={() => setActiveTab("sandwiches")}
+            role="tab"
+            aria-selected={activeTab === "sandwiches"}
           >
             Sandwiches
           </button>
@@ -100,6 +118,8 @@ const Menu = () => {
               activeTab === "wraps" ? "menu__tab--active" : ""
             }`}
             onClick={() => setActiveTab("wraps")}
+            role="tab"
+            aria-selected={activeTab === "wraps"}
           >
             Wraps
           </button>
@@ -108,7 +128,7 @@ const Menu = () => {
         {/* Grid */}
         <div className="menu__grid">
           {filteredItems.map((item) => (
-            <MenuItem key={item.id} item={item} />
+            <MenuItem key={item.PK} item={item} onAdd={onAddToCart} />
           ))}
         </div>
 

@@ -47,7 +47,11 @@ const Order = () => {
           </div>
         ) : (
           <form className="order__form" onSubmit={handleSubmit}>
+            <label htmlFor="order-email" className="sr-only">
+              Email address
+            </label>
             <input
+              id="order-email"
               type="email"
               placeholder="your@email.com"
               className="order__input"
