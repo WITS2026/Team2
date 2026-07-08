@@ -169,6 +169,13 @@
 
 .order__input:focus {
   border-color: rgba(12, 12, 10, 0.5);
+  box-shadow: 0 0 0 3px rgba(232, 255, 107, 0.6);
+}
+
+.order__submit:focus-visible,
+.order__channel:focus-visible {
+  outline: 2px solid #0c0c0a;
+  outline-offset: 2px;
 }
 
 .order__submit {

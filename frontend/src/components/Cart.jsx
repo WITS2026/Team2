@@ -1,7 +1,13 @@
 import React from "react";
 import "./Cart.css";
 
-const Cart = ({ cartItems = [], onUpdateQuantity, onRemoveItem, onClose }) => {
+const Cart = ({
+  cartItems = [],
+  onUpdateQuantity,
+  onRemoveItem,
+  onClose,
+  onCheckout,
+}) => {
   // Calculate pricing math
   const subtotal = cartItems.reduce(
     (acc, item) => acc + item.price * item.quantity,
@@ -25,7 +31,7 @@ const Cart = ({ cartItems = [], onUpdateQuantity, onRemoveItem, onClose }) => {
 
         {cartItems.length === 0 ? (
           <div className="cart__empty">
-            <span className="cart__empty-icon">🛒</span>
+            <span className="cart__empty-icon" aria-hidden="true">🛒</span>
             <p className="cart__empty-text">
               Your cart is feeling a bit light.
             </p>
@@ -47,7 +53,7 @@ const Cart = ({ cartItems = [], onUpdateQuantity, onRemoveItem, onClose }) => {
               {cartItems.map((item) => (
                 <div key={item.id} className="cart-item">
                   <div className="cart-item__visual">
-                    <span className="cart-item__emoji">
+                    <span className="cart-item__emoji" aria-hidden="true">
                       {item.emoji || "🥪"}
                     </span>
                   </div>
@@ -69,14 +75,19 @@ const Cart = ({ cartItems = [], onUpdateQuantity, onRemoveItem, onClose }) => {
                           onUpdateQuantity(item.id, item.quantity - 1)
                         }
                         disabled={item.quantity <= 1}
+                        aria-label={`Decrease quantity of ${item.name}`}
                       >
                         -
                       </button>
-                      <span>{item.quantity}</span>
+                      <span aria-live="polite">
+                        {item.quantity}
+                        <span className="sr-only"> in cart</span>
+                      </span>
                       <button
                         onClick={() =>
                           onUpdateQuantity(item.id, item.quantity + 1)
                         }
+                        aria-label={`Increase quantity of ${item.name}`}
                       >
                         +
                       </button>
@@ -84,6 +95,7 @@ const Cart = ({ cartItems = [], onUpdateQuantity, onRemoveItem, onClose }) => {
                     <button
                       className="cart-item__remove"
                       onClick={() => onRemoveItem(item.id)}
+                      aria-label={`Remove ${item.name} from cart`}
                     >
                       Remove
                     </button>
@@ -114,7 +126,10 @@ const Cart = ({ cartItems = [], onUpdateQuantity, onRemoveItem, onClose }) => {
                 <span>${total.toFixed(2)}</span>
               </div>
 
-              <button className="cart__btn cart__btn--checkout">
+              <button
+                className="cart__btn cart__btn--checkout"
+                onClick={onCheckout}
+              >
                 Proceed to Checkout — ${total.toFixed(2)}
               </button>
 

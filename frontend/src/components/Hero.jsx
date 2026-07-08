@@ -6,9 +6,6 @@ const Hero = () => {
     document.getElementById("menu")?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const scrollToOrder = () => {
-    document.getElementById("order")?.scrollIntoView({ behavior: "smooth" });
-  };
 
   return (
     <section id="hero" className="hero">
@@ -25,7 +22,7 @@ const Hero = () => {
           hand-pressed lavash, topped with ingredients you'll actually remember.
         </p>
         <div className="hero__actions">
-          <button className="hero__btn hero__btn--primary" onClick={scrollToOrder}>
+          <button className="hero__btn hero__btn--primary" onClick={scrollToMenu}>
             Order for pickup
           </button>
           <button className="hero__btn hero__btn--ghost" onClick={scrollToMenu}>
