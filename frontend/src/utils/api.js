@@ -1,7 +1,24 @@
 // Thin wrappers around the four backend Lambda routes (via API Gateway).
 // Base invoke URL for the foldApi HTTP API ($default stage).
 
-const BASE_URL = "https://tkzt0gym4e.execute-api.us-east-1.amazonaws.com";
+import { fetchAuthSession } from "aws-amplify/auth";
+
+const BASE_URL = "https://wjiif3e9we.execute-api.us-east-1.amazonaws.com";
+async function getAuthHeaders() {
+  try {
+    const session = await fetchAuthSession();
+    const token = session.tokens.idToken.toString();
+    return {
+      Authorization: token,
+      "Content-Type": "application/json",
+    };
+  } catch (error) {
+    console.error("Failed to fetch auth session:", error);
+    return {
+      "Content-Type": "application/json",
+    };
+  }
+}
 
 export async function getMenu() {
   const res = await fetch(`${BASE_URL}/menu`);
@@ -9,37 +26,42 @@ export async function getMenu() {
   return res.json();
 }
 
-export async function getCart(cartId) {
-  const res = await fetch(`${BASE_URL}/GetCart/cart/${cartId}`);
+export async function getCart() {
+  const headers = await getAuthHeaders();
+  const res = await fetch(`${BASE_URL}/cart`, {
+    method: "GET",
+    headers: headers, // [cite: 270]
+  });
   if (!res.ok) throw new Error("Failed to fetch cart");
   return res.json();
 }
 
-export async function updateCartItem(cartId, menuItemId, quantity) {
-  const res = await fetch(
-    `${BASE_URL}/updateCartItem/cart/${cartId}/menuItem/${menuItemId}`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ quantity }),
-    },
-  );
+export async function updateCartItem(menuItemId, quantity) {
+  const headers = await getAuthHeaders();
+  const res = await fetch(`${BASE_URL}/cart/menuItem/${menuItemId}`, {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify({ quantity }),
+  });
   if (!res.ok) throw new Error("Failed to update cart item");
   return res.json();
 }
 
-export async function deleteFromCart(cartId, menuItemId) {
-  const res = await fetch(
-    `${BASE_URL}/deleteFromCart/cart/${cartId}/menuItem/${menuItemId}`,
-    { method: "DELETE" },
-  );
+export async function deleteFromCart(menuItemId) {
+  const headers = await getAuthHeaders();
+  const res = await fetch(`${BASE_URL}/cart/menuItem/${menuItemId}`, {
+    method: "DELETE",
+    headers: headers,
+  });
   if (!res.ok) throw new Error("Failed to remove cart item");
   return res.json();
 }
 
-export async function placeOrder(cartId) {
-  const res = await fetch(`${BASE_URL}/placeOrder/cart/${cartId}`, {
+export async function placeOrder() {
+  const headers = await getAuthHeaders();
+  const res = await fetch(`${BASE_URL}/placeOrder`, {
     method: "POST",
+    headers: headers,
   });
   if (!res.ok) throw new Error("Failed to place order");
   return res.json();
