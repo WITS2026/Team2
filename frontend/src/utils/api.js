@@ -3,10 +3,20 @@
 
 import { fetchAuthSession } from "aws-amplify/auth";
 
-const BASE_URL = "https://wjiif3e9we.execute-api.us-east-1.amazonaws.com";
+const BASE_URL = "https://tkzt0gym4e.execute-api.us-east-1.amazonaws.com";
 async function getAuthHeaders() {
   try {
     const session = await fetchAuthSession();
+
+    if (!session?.tokens?.idToken) {
+      console.warn(
+        "No active Cognito session found. User might be logged out.",
+      );
+      return {
+        "Content-Type": "application/json",
+      };
+    }
+
     const token = session.tokens.idToken.toString();
     return {
       Authorization: token,
@@ -38,10 +48,10 @@ export async function getCart() {
 
 export async function updateCartItem(menuItemId, quantity) {
   const headers = await getAuthHeaders();
-  const res = await fetch(`${BASE_URL}/cart/menuItem/${menuItemId}`, {
+  const res = await fetch(`${BASE_URL}/cart`, {
     method: "POST",
     headers: headers,
-    body: JSON.stringify({ quantity }),
+    body: JSON.stringify({ menuItemId, quantity }),
   });
   if (!res.ok) throw new Error("Failed to update cart item");
   return res.json();
@@ -49,14 +59,14 @@ export async function updateCartItem(menuItemId, quantity) {
 
 export async function deleteFromCart(menuItemId) {
   const headers = await getAuthHeaders();
-  const res = await fetch(`${BASE_URL}/cart/menuItem/${menuItemId}`, {
-    method: "DELETE",
+  const res = await fetch(`${BASE_URL}/cart`, {
+    method: "DELETE", // Or POST depending on how your backend handle updates
     headers: headers,
+    body: JSON.stringify({ menuItemId }),
   });
   if (!res.ok) throw new Error("Failed to remove cart item");
   return res.json();
 }
-
 export async function placeOrder() {
   const headers = await getAuthHeaders();
   const res = await fetch(`${BASE_URL}/placeOrder`, {
