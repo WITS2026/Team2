@@ -80,6 +80,10 @@ describe("Get Cart Lambda", () => {
   });
 
   test("returns 500 when DynamoDB throws an error", async () => {
+    const consoleErrorSpy = jest
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
+
     mockSend.mockRejectedValue(new Error("DynamoDB failure"));
 
     const event = {
@@ -101,5 +105,7 @@ describe("Get Cart Lambda", () => {
     const body = JSON.parse(result.body);
 
     expect(body.message).toBe("DynamoDB failure");
+
+    consoleErrorSpy.mockRestore();
   });
 });
