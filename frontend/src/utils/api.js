@@ -3,7 +3,7 @@
 
 import { fetchAuthSession } from "aws-amplify/auth";
 
-const BASE_URL = "https://3rhm69t8pc.execute-api.us-east-1.amazonaws.com";
+const BASE_URL = "https://8zunboctm6.execute-api.us-east-1.amazonaws.com";
 
 // Fetch auth headers. Options:
 //  - requireIdToken (boolean): when true, throw if only an accessToken is present.
@@ -35,8 +35,13 @@ async function getAuthHeaders(options = {}) {
     // Attach whichever token is available (idToken preferred).
     // Debug: indicate which token we attached (remove in production).
     try {
-      const preview = token && token.length > 20 ? token.slice(0, 20) + "..." : token;
-      console.debug("getAuthHeaders: attaching", idToken ? "idToken" : "accessToken", { preview });
+      const preview =
+        token && token.length > 20 ? token.slice(0, 20) + "..." : token;
+      console.debug(
+        "getAuthHeaders: attaching",
+        idToken ? "idToken" : "accessToken",
+        { preview },
+      );
     } catch (e) {
       /* ignore logging errors */
     }
