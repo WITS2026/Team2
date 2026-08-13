@@ -74,12 +74,13 @@ describe("Menu component", () => {
 
     expect(screen.queryByText("Classic Chicken")).not.toBeInTheDocument();
 
-    await user.click(
-      screen.getByRole("button", {
-        name: "Add Falafel Wrap to order",
-      }),
-    );
+    const addButton = screen.getByRole("button", {
+      name: "Add Falafel Wrap to order",
+    });
 
+    await user.click(addButton);
+
+    expect(addButton).toHaveTextContent("Added ✓");
     expect(addToCartMock).toHaveBeenCalledWith(mockMenuItems[1]);
   });
 

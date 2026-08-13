@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { tagColors } from "../data/TagColors";
 import { getMenu } from "../utils/api";
 import "./Menu.css";
 
-const MenuItem = ({ item, onAdd }) => {
+const MenuItem = ({ item, onAdd, isAdded }) => {
   const tag = tagColors?.[item.tag];
 
   return (
@@ -29,11 +29,11 @@ const MenuItem = ({ item, onAdd }) => {
       <div className="menu-item__footer">
         <span className="menu-item__price">${item.price}</span>
         <button
-          className="menu-item__add"
+          className={`menu-item__add ${isAdded ? "menu-item__add--success" : ""}`}
           onClick={() => onAdd(item)}
           aria-label={`Add ${item.name} to order`}
         >
-          Add to order +
+          {isAdded ? "Added ✓" : "Add to order +"}
         </button>
       </div>
     </div>
@@ -45,6 +45,8 @@ const Menu = ({ onAddToCart }) => {
   const [activeTab, setActiveTab] = useState("sandwiches");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [addedItems, setAddedItems] = useState({});
+  const addedTimeouts = useRef({});
 
   useEffect(() => {
     const fetchMenu = async () => {
@@ -61,6 +63,28 @@ const Menu = ({ onAddToCart }) => {
 
     fetchMenu();
   }, []);
+
+  useEffect(() => {
+    return () => {
+      Object.values(addedTimeouts.current).forEach((timeoutId) =>
+        clearTimeout(timeoutId),
+      );
+    };
+  }, []);
+
+  const handleAddToCart = (item) => {
+    onAddToCart(item);
+    setAddedItems((prev) => ({ ...prev, [item.PK]: true }));
+
+    if (addedTimeouts.current[item.PK]) {
+      clearTimeout(addedTimeouts.current[item.PK]);
+    }
+
+    addedTimeouts.current[item.PK] = setTimeout(() => {
+      setAddedItems((prev) => ({ ...prev, [item.PK]: false }));
+      delete addedTimeouts.current[item.PK];
+    }, 1200);
+  };
 
   // filter items by category (sandwiches / wraps)
   const filteredItems = useMemo(() => {
@@ -122,7 +146,12 @@ const Menu = ({ onAddToCart }) => {
         {/* Grid */}
         <div className="menu__grid">
           {filteredItems.map((item) => (
-            <MenuItem key={item.PK} item={item} onAdd={onAddToCart} />
+            <MenuItem
+              key={item.PK}
+              item={item}
+              onAdd={handleAddToCart}
+              isAdded={Boolean(addedItems[item.PK])}
+            />
           ))}
         </div>
 
